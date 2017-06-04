@@ -1,3 +1,4 @@
+library(readr)
 library(shiny)
 library(dplyr) #for data manipulation
 library(tidyr) #for reshaping data
@@ -9,24 +10,17 @@ library(grid) #for rendering a raster grob
 
 
 #read the csv files, make sure it is in your working directory
-dataset <- read_csv("C:/Users/user/Desktop/DataScience&MachineLearning/datascience_course/dataframe/veg_frult_all.csv")
-#刪除重複資料
-dataset = unique.data.frame(dataset)
+dataset <-  unique(read_csv("veg_fruit.csv"))
+
+#蔬菜
+vet = dataset[dataset$type=="蔬菜",]
+#水果
+fruit = dataset[dataset$type=="水果",]
 #受水汙染
 water_danger = dataset[dataset$waterDanger == 1,]
 #重金屬汙染
 metal_danger = dataset[dataset$metalDanger == "鎘超標",]
 
-# #modify the averageleague dataframe's FG% column and add additional location information (mean coordinate of all shots in particular region)
-# all<-shotchart%>%group_by(SHOT_ZONE_BASIC,SHOT_ZONE_AREA,SHOT_ZONE_RANGE)%>%summarise(LOCX=mean(LOC_X),LOCY=mean(LOC_Y)) #calculate the mean location for each region
-# 
-# "%ni%" <- Negate("%in%")   #create a new operator, which is the opposite of %in%
-# all<-filter(all,SHOT_ZONE_AREA%ni%"Back Court(BC)") #eliminate back court shots
-# averageleague<-filter(averageleague,SHOT_ZONE_AREA%ni%"Back Court(BC)") #eliminate back court chots
-# 
-# averageleague$LOCX<-all$LOCX
-# averageleague$LOCY<-all$LOCY
-# averageleague$FG_PCT<-percent(round(averageleague$FG_PCT,digits=3)) #turn Field goal percentage into percentage form
 
 #create a blank theme for each plot
 blank_theme <- theme_minimal()+
@@ -44,31 +38,32 @@ function(input, output){
   output$plot1 <- renderPlot({
     if(input$plot==1){
       subset = filter(dataset,crop%in%input$Fruit)
-      x = barplot(sort(table(subset$county)),horiz = TRUE,las=1)
+      x = barplot(sort(table(subset$county)),horiz = TRUE,las=1,col = "#0080FF")
     }
     if(input$plot==2){
       subset = filter(dataset,crop%in%input$Fruit)
       names=c("無汙染","受汙染")
       if(is.na(names(table(subset$waterDanger))[2])){
-        x = barplot(sort(table(subset$waterDanger)),las=1,names.arg=c("無汙染"))
+        x = barplot(sort(table(subset$waterDanger)),las=1,names.arg=c("無汙染"),col = "#0080FF")
       }else{
-        x = barplot(sort(table(subset$waterDanger)),las=1,names.arg=names)
+        x = barplot(sort(table(subset$waterDanger)),las=1,names.arg=names,col = "#0080FF")
       }
     }
     if(input$plot==3){
       subset = filter(dataset,crop%in%input$Fruit)
       names=c("無汙染","受汙染")
       if(is.na(names(table(subset$metalDanger))[2])){
-        x = barplot(sort(table(subset$metalDanger)),las=1,names.arg=c("無汙染"))
+        x = barplot(sort(table(subset$metalDanger)),las=1,names.arg=c("無汙染"),col = "#0080FF")
       }else{
-        x = barplot(sort(table(subset$metalDanger)),las=1,names.arg=names)
+        x = barplot(sort(table(subset$metalDanger)),las=1,names.arg=names,col = "#0080FF")
       }
       }
     if(input$plot==4){
       subset = filter(dataset,crop%in%input$Fruit)
-      barplot(sort(table(subset$month),decreasing = TRUE),horiz=TRUE,las=1)
+      barplot(sort(table(subset$month),decreasing = TRUE),horiz=TRUE,las=1,col = "#0080FF")
     }  
     if(input$plot==5){
+      attach(dataset)
       count = data.frame(table(crop,county))
       p <- ggplot(count, aes(count$county,count$crop )) + geom_tile(aes(fill =  count$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
       print(p)
@@ -91,7 +86,6 @@ function(input, output){
       print(region)
     }  
   })
-  
   output$plot2 <- renderPlot({
     if(input$plot==1){
       
@@ -101,7 +95,7 @@ function(input, output){
       
       if(is.na(names(table(subset$waterDanger))[2])  ){
       }else {
-         barplot(sort(table(subset[subset$waterDanger==1,]$county)),las=1)
+         barplot(sort(table(subset[subset$waterDanger==1,]$county)),las=1,col = "#0080FF")
       }
       # #create a line plot for 2 point FG% by shotclock time left
       # subset<-filter(shotdashboard,PLAYER_NAME%in%input$player&CLASS%in%"ShotClockShooting")
@@ -123,7 +117,7 @@ function(input, output){
       
       if(is.na(names(table(subset$metalDanger))[2])  ){
       }else {
-        barplot(sort(table(subset[subset$metalDanger=="鎘超標",]$county)),las=1)
+        barplot(sort(table(subset[subset$metalDanger=="鎘超標",]$county)),las=1,col = "#0080FF")
       }
       #create a line plot for FG% by the range from the closest defender(shot>10 feet)
       # subset<-filter(shotdashboard,PLAYER_NAME%in%input$player&CLASS%in%"ClosestDefender10ftPlusShooting")
@@ -141,6 +135,7 @@ function(input, output){
       
     }
     if(input$plot==5){
+     
       fruitcount = data.frame(table(fruit$crop,fruit$county))
       x <- ggplot(fruitcount, aes(fruitcount$Var2,fruitcount$Var1 )) + geom_tile(aes(fill =  fruitcount$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
       print(x)
@@ -177,6 +172,7 @@ function(input, output){
   })
   output$plot3 <- renderPlot({
     if(input$plot == 5){
+      
       vetcount = data.frame(table(vet$crop,vet$county))
       s <- ggplot(vetcount, aes(vetcount$Var2,vetcount$Var1 )) + geom_tile(aes(fill =  vetcount$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
       print(s)
