@@ -65,10 +65,18 @@ function(input, output){
     if(input$plot==5){
       attach(dataset)
       count = data.frame(table(crop,county))
-      p <- ggplot(count, aes(count$county,count$crop )) + geom_tile(aes(fill =  count$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
+      country = count$county
+      crop = count$crop
+      p <- ggplot(count, aes(country,crop )) + geom_tile(aes(fill =  count$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
       print(p)
     }
     if(input$plot==6){
+      attach(water_danger)
+      count = data.frame(table(crop,county))
+      country = count$county
+      crop = count$crop
+      p <- ggplot(count, aes(country,crop )) + geom_tile(aes(fill =  count$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
+      print(p)
     }
     if(input$plot==7){
       #plot the FG% and number of shot attemps by each shooting region for average of the league
@@ -137,10 +145,18 @@ function(input, output){
     if(input$plot==5){
      
       fruitcount = data.frame(table(fruit$crop,fruit$county))
-      x <- ggplot(fruitcount, aes(fruitcount$Var2,fruitcount$Var1 )) + geom_tile(aes(fill =  fruitcount$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
+      country = fruitcount$Var2
+      crop = fruitcount$Var1
+      x <- ggplot(fruitcount, aes(country,crop )) + geom_tile(aes(fill =  fruitcount$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
       print(x)
     }
     if(input$plot==6){
+      attach(metal_danger)
+      count = data.frame(table(crop,county))
+      country = count$county
+      crop = count$crop
+      p <- ggplot(count, aes(country,crop )) + geom_tile(aes(fill =  count$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
+      print(p)
     }
     if(input$plot==7){
       # courtimgurl<-"https://thedatagame.files.wordpress.com/2016/03/nba_court.jpg"
@@ -174,7 +190,9 @@ function(input, output){
     if(input$plot == 5){
       
       vetcount = data.frame(table(vet$crop,vet$county))
-      s <- ggplot(vetcount, aes(vetcount$Var2,vetcount$Var1 )) + geom_tile(aes(fill =  vetcount$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
+      country = vetcount$Var2
+      crop = vetcount$Var1
+      s <- ggplot(vetcount, aes(country,crop)) + geom_tile(aes(fill =  vetcount$Freq), colour = "white") + scale_fill_gradient(low = "yellow", high = "red")
       print(s)
     }
   })

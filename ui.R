@@ -10,7 +10,7 @@ fluidPage(
                   names(table(dataset$crop))
       ),
       radioButtons("plot","Which fruit/vegetable data do you want to know?",
-                   c("Regional distribution"=1,"water data"=2,"metal data"=3,"Rich period"=4,"TotalHeatMap"=5)
+                   c("Regional Distribution"=1,"Water Data"=2,"Metal Data"=3,"Rich Period"=4,"TotalHeatMap(produce)"=5,"Pollution HeatMap"=6)
       )
     ),  
     mainPanel(tabsetPanel(
