@@ -14,6 +14,6 @@ Then I combined the table above with table 4, finishing our using data.
 # Shiny App 
 I used shiny app to show the pollution situation of Fruit and Vegetable in Taiwan, you can run this project by running the code below, thanks for your reading.
 
-----------execute the code--------------------
 library(shiny)
+
 runGitHub("rockmk2013/FruitAndVeg_analysis_shiny_app")
